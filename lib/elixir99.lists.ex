@@ -103,4 +103,13 @@ defmodule Elixir99.Lists do
                 end
         end
     end
+
+    # Run-length encoding modified second implementation
+    def p11a(l) when is_list(l), do: p11a_rec(l, 0, []) |> Enum.reverse
+    defp p11a_rec([], _, _), do: [] # initial list empty
+    defp p11a_rec([h], 0, acc), do: [h | acc]
+    defp p11a_rec([h], count, acc), do: [{count+1, h} | acc]
+    defp p11a_rec([h | [h|t]], count, acc), do: p11a_rec([h|t], count+1, acc)
+    defp p11a_rec([h | [h2|t]], 0, acc), do: p11a_rec([h2|t], 0, [h | acc])
+    defp p11a_rec([h | [h2|t]], count, acc), do: p11a_rec([h2|t], 0, [{count+1, h} | acc])
 end
