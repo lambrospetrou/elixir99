@@ -47,4 +47,59 @@ defmodule Elixir99.Lists do
     defp p07_rec([h|t], acc) when not is_list(h), do: [h] ++ p07_rec(t, []) ++ acc
     defp p07_rec([h|t], acc) when is_list(h), do: p07_rec(h, []) ++ p07_rec(t, []) ++ acc
 
+    # flatten second implementation
+    def p07a(l) when is_list(l), do: p07a_rec(l, []) |> Enum.reverse
+    defp p07a_rec([], acc), do: acc
+    defp p07a_rec([h|t], acc) when not is_list(h), do: p07a_rec(t, [h|acc])
+    defp p07a_rec([h|t], acc) when is_list(h), do: p07a_rec(t, p07a_rec(h, acc))
+
+    # eliminate duplicates
+    def p08(l) when is_list(l), do: p08_rec(l, []) |> Enum.reverse
+    defp p08_rec([], acc), do: acc
+    defp p08_rec([h|t], []), do: p08_rec(t, [h])
+    defp p08_rec([h|t], acc) do
+        case h == hd(acc) do
+            true -> 
+                p08_rec(t, acc)
+            false -> 
+                p08_rec(t, [h|acc])
+        end
+    end
+
+    # pack duplicates into sublists
+    def p09(l) when is_list(l), do: p09_rec(l, [], []) |> Enum.reverse
+    defp p09_rec([], [], acc), do: acc
+    defp p09_rec([], lacc, acc), do: [lacc | acc]
+    defp p09_rec([h | t], [], acc), do: p09_rec(t, [h], acc)
+    defp p09_rec([h | t], [h | t2], acc), do: p09_rec(t, [h | [h|t2]], acc)
+    defp p09_rec([h | t], [h2 | t2], acc), do: p09_rec(t, [h], [[h2|t2] | acc])
+    
+    # Run-length encoding
+    def p10(l) when is_list(l), do: p10_rec(l, [], 0, []) |> Enum.reverse
+    defp p10_rec([], [], 0, acc), do: acc
+    defp p10_rec([], lacc, n, acc), do: [{n, hd(lacc)} | acc]
+    defp p10_rec([h | t], [], 0, acc), do: p10_rec(t, [h], 1, acc)
+    defp p10_rec([h | t], lacc, n, acc) do
+        case h == hd(lacc) do
+            true -> p10_rec(t, [h|lacc], n+1, acc)
+            false -> p10_rec(t, [h], 1, [{n, hd(lacc)} | acc])
+        end
+    end
+
+    # Run-length encoding modified (non duplicates appear directly in the list)
+    def p11(l) when is_list(l), do: p11_rec(l, [], 0, []) |> Enum.reverse
+    defp p11_rec([], [], 0, acc), do: acc
+    defp p11_rec([], [h], 1, acc), do: [h | acc]
+    defp p11_rec([], lacc, n, acc), do: [{n, hd(lacc)} | acc]
+    defp p11_rec([h | t], [], 0, acc), do: p11_rec(t, [h], 1, acc)
+    defp p11_rec([h | t], lacc, n, acc) do
+        case h == hd(lacc) do
+            true -> p11_rec(t, [h|lacc], n+1, acc)
+            false -> 
+                case n == 1 do
+                    true -> p11_rec(t, [h], 1, [hd(lacc) | acc])
+                    false -> p11_rec(t, [h], 1, [{n, hd(lacc)} | acc])
+                end
+        end
+    end
 end
