@@ -57,14 +57,8 @@ defmodule Elixir99.Lists do
     def p08(l) when is_list(l), do: p08_rec(l, []) |> Enum.reverse
     defp p08_rec([], acc), do: acc
     defp p08_rec([h|t], []), do: p08_rec(t, [h])
-    defp p08_rec([h|t], acc) do
-        case h == hd(acc) do
-            true -> 
-                p08_rec(t, acc)
-            false -> 
-                p08_rec(t, [h|acc])
-        end
-    end
+    defp p08_rec([h|t], [h|t2]), do: p08_rec(t, [h|t2])
+    defp p08_rec([h|t], [h2|t2]), do: p08_rec(t, [h|[h2|t2]])
 
     # pack duplicates into sublists
     def p09(l) when is_list(l), do: p09_rec(l, [], []) |> Enum.reverse
@@ -84,7 +78,14 @@ defmodule Elixir99.Lists do
             true -> p10_rec(t, [h|lacc], n+1, acc)
             false -> p10_rec(t, [h], 1, [{n, hd(lacc)} | acc])
         end
-    end
+    end    
+
+    # Run-length encoding second implementation
+    def p10a(l) when is_list(l), do: p10a_rec(l, 0, []) |> Enum.reverse
+    defp p10a_rec([], 0, []), do: [] # initial list empty
+    defp p10a_rec([h], count, acc), do: [{count+1, h} | acc]
+    defp p10a_rec([h | [h|t]], count, acc), do: p10a_rec([h|t], count+1, acc)
+    defp p10a_rec([h | [h2|t]], count, acc), do: p10a_rec([h2|t], 0, [{count+1, h} | acc])
 
     # Run-length encoding modified (non duplicates appear directly in the list)
     def p11(l) when is_list(l), do: p11_rec(l, [], 0, []) |> Enum.reverse
