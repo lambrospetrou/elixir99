@@ -208,6 +208,8 @@ defmodule Elixir99.ListsTest do
   test "p24. Generate the combinations of K distinct objects chosen from the N elements of a list. (medium)" do
     l = [1,2,3,4,5,6]
     method_a = Lists.p24(l, 3)
+    method_b = Lists.p24a(l, 3)
+    assert method_a == method_b
     assert method_a == [[1,2,3],[1,2,4],[1,2,5],[1,2,6],[1,3,4],[1,3,5],[1,3,6],[1,4,5],[1,4,6],[1,5,6],[2,3,4],[2,3,5],[2,3,6],[2,4,5],[2,4,6],[2,5,6],[3,4,5],[3,4,6],[3,5,6],[4,5,6]]
   end
 end

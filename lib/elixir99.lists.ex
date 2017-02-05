@@ -204,6 +204,13 @@ defmodule Elixir99.Lists do
     end
     |> Enum.flat_map(&(&1))
   end
-  
+ 
+  # Same algorithm without the explicit for-comprehension
+  # Inspired by https://wiki.haskell.org/99_questions/Solutions/26
+  def p24a(l, k) when is_list(l) and k>0, do: do_p24a(Enum.sort(l), k, length(l))
+  defp do_p24a(l, 1, _sz), do: (for x<-l do [x] end)
+  defp do_p24a([], _, _), do: []
+  defp do_p24a(l, k, sz), do: Enum.map(do_p24a(tl(l), k-1, sz), &([hd(l) | &1])) ++ do_p24a(tl(l), k, sz)
+
 end
 
