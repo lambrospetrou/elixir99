@@ -151,4 +151,63 @@ defmodule Elixir99.ListsTest do
     assert Lists.p15([1], 1) == [[1],[]]
     assert Lists.p15([1,2,3,4,5,6], 3) == [[1,2,3],[4,5,6]]
   end
+  
+  test "p16 - extract a slice of a list" do
+    assert Lists.p16([1,2,3,4,5,6,7,8], 2, 6) == [3,4,5,6, 7]
+    assert Lists.p16([1], 0, 10) == [1]
+    assert Lists.p16([1,2,3,4,5,6], 0, 5) == [1,2,3,4,5,6]
+    assert Lists.p16([1,2,3,4,5,6], 5, 5) == [6]
+  end
+
+  test "p17 - rotate a list N places to the left" do
+    assert Lists.p17([1,2,3,4,5,6,7,8], 3) == [4,5,6,7,8,1,2,3]
+    assert Lists.p17([1,2,3,4,5,6,7,8], -2) == [7,8,1,2,3,4,5,6]
+  end
+  
+  test "p18 - remove the k-th element of a list" do
+    assert Lists.p18([1,2,3,4,5,6,7,8], 3) == [1,2,3,5,6,7,8]
+    assert Lists.p18([1,2,3,4,5,6,7,8], 0) == [2,3,4,5,6,7,8]
+    assert Lists.p18([1,2,3,4,5,6,7,8], 10) == [1,2,3,4,5,6,7,8]
+    assert Lists.p18([1,2,3,4,5,6,7,8], 7) == [1,2,3,4,5,6,7]
+  end
+
+  test "p19 - add an element to k-th position of a list" do
+    assert Lists.p19([1,2,4,5,6,7,8], 3, 2) == [1,2,3,4,5,6,7,8]
+    assert Lists.p19([2,3,4,5,6,7,8], 1, 0) == [1,2,3,4,5,6,7,8]
+    assert Lists.p19([1,2,3,4,5,6,7,8], 9, 100) == [1,2,3,4,5,6,7,8,9]
+    assert Lists.p19([1,2,3,4,5,6,7,8], 9, 8) == [1,2,3,4,5,6,7,8,9]
+  end
+  
+  test "p20 - create a list containing the numbers of a range" do
+    assert Lists.p20(5, 5) == [5]
+    assert Lists.p20(5, -5) == [5,4,3,2,1,0,-1,-2,-3,-4,-5]
+    assert Lists.p20(-5, 5) == [-5,-4,-3,-2,-1,0,1,2,3,4,5]
+  end
+
+  test "p21 - Extract a given number of randomly selected elements from a list. (medium)" do
+    l = [1,2,3,4,5,6,7,8,9,0]
+    selected = Lists.p21(l, 3)
+    assert length(selected) == 3
+    assert Enum.all?(selected, &(Enum.member?(l, &1))) == true
+  end
+
+  test "p22. Lotto: Draw N different random numbers from the set 1..M. (easy)" do
+    m = 100
+    selected = Lists.p22(m, 3)
+    assert length(selected) == 3
+    assert Enum.all?(selected, &(1<=&1 and &1<=M)) == true
+  end
+
+  test "p23. Create a random permutation of a list. (easy)" do
+    l = [1,2,3,4,5,6,7,8]
+    selected = Lists.p23(l)
+    assert length(selected) == length(l)
+    assert Enum.sort(l) == Enum.sort(selected)
+  end
+
+  test "p24. Generate the combinations of K distinct objects chosen from the N elements of a list. (medium)" do
+    l = [1,2,3,4,5,6]
+    method_a = Lists.p24(l, 3)
+    assert method_a == [[1,2,3],[1,2,4],[1,2,5],[1,2,6],[1,3,4],[1,3,5],[1,3,6],[1,4,5],[1,4,6],[1,5,6],[2,3,4],[2,3,5],[2,3,6],[2,4,5],[2,4,6],[2,5,6],[3,4,5],[3,4,6],[3,5,6],[4,5,6]]
+  end
 end

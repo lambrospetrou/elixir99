@@ -138,45 +138,72 @@ defmodule Elixir99.Lists do
   defp do_p15(l, 0, acc), do: [Enum.reverse(acc), l]
   defp do_p15([h | t], c, acc), do: do_p15(t, c-1, [h | acc])
 
+  # 16. Extract a slice from a list. (medium)
+  def p16(l, from, to) when is_list(l) and from >= 0 and to >= from, do: do_p16(l, from, to, 0, [])
+  defp do_p16([], _, _, _, acc), do: Enum.reverse(acc)
+  defp do_p16([_h | t], from, to, cidx, acc) when cidx < from, do: do_p16(t, from, to, cidx+1, acc)
+  defp do_p16(_l, _from, to, cidx, acc) when cidx > to, do: Enum.reverse(acc)
+  defp do_p16([h | t], from, to, cidx, acc), do: do_p16(t, from, to, cidx+1, [h | acc])
+
+  # 17. Rotate a list N places to the left. (medium)
+  def p17(l, n) when is_list(l) and n>=0, do: do_p17(l, n, [])
+  def p17(l, n) when is_list(l) and n<0, do: Enum.reverse(do_p17(Enum.reverse(l), -n, []))
+  defp do_p17([], _, acc), do: acc
+  defp do_p17(l, 0, acc), do: l ++ Enum.reverse(acc)
+  defp do_p17([h | t], c, acc), do: do_p17(t, c-1, [h | acc])
+
+  # 18. Remove the K'th element from a list. (easy)
+  def p18(l, k) when is_list(l) and k>=0, do: do_p18(l, k, [])
+  defp do_p18([], _, acc), do: Enum.reverse(acc)
+  defp do_p18([_ | t], 0, acc), do: Enum.reverse(acc) ++ t
+  defp do_p18([h | t], c, acc), do: do_p18(t, c-1, [h | acc])
+
+  # 19. Insert an element at a given position into a list. (easy)
+  def p19(l, v, idx) when is_list(l) and idx>=0, do: do_p19(l, v, idx, [])
+  defp do_p19([], v, _, acc), do: Enum.reverse([v | acc])
+  defp do_p19(l, v, 0, acc), do: Enum.reverse(acc) ++ [v | l]
+  defp do_p19([h | t], v, c, acc), do: do_p19(t, v, c-1, [h | acc])
+
+  # 20. Create a list containing all integers within a given range. (easy)
+  # If first argument is greater than second, produce a list in decreasing order.
+  def p20(from, to) when is_integer(from) and is_integer(to) and from<=to, do: do_p20(from, to, [])
+  def p20(from, to) when is_integer(from) and is_integer(to), do: Enum.reverse(do_p20(to, from, []))
+  defp do_p20(from, to, acc) when from > to, do: Enum.reverse(acc)
+  defp do_p20(from, to, acc), do: do_p20(from+1, to, [from | acc])
+
+  # 21. Extract a given number of randomly selected elements from a list. (medium)
+  def p21(l, n) when is_list(l) and n >= 0, do: do_p21(l, n, [])
+  defp do_p21([], _, _), do: []
+  defp do_p21(_, 0, acc), do: acc
+  defp do_p21(l, c, acc), do: do_p21(l, c-1, [Enum.random(l) | acc])
+
+  # 22. Lotto: Draw N different random numbers from the set 1..M. (easy)
+  def p22(upto, n) when upto>0 and n >= 0, do: do_p22(upto, n, [])
+  defp do_p22(_, 0, acc), do: acc
+  defp do_p22(upto, c, acc), do: do_p22(upto, c-1, [Kernel.round(:rand.uniform * upto) | acc])
+
+  # 23. Generate a random permutation of the elements of a list. (easy)
+  def p23(l) when is_list(l), do: do_p23(l)
+  defp do_p23(l) do
+    sz = length(l)
+    Enum.map(l, &({Kernel.round(:rand.uniform * sz), &1}))
+    |> Enum.sort(fn({a, _}, {b, _}) -> a < b end)
+    |> Enum.map(fn({_, wa}) -> wa end)
+  end
+
+  # 24. Generate the combinations of K distinct objects chosen from the N elements of a list. (medium)
+  # The algorithm as described in http://stackoverflow.com/a/128592
+  def p24(l, k) when is_list(l) and k>0, do: do_p24(Enum.sort(l), k, length(l))
+  defp do_p24(l, 1, _sz) do
+    for x<-l do [x] end
+  end
+  defp do_p24(l, k, sz) do
+    for x<-0..(sz-k) do
+      newList = Enum.drop(l, x)
+      Enum.map(do_p24(tl(newList), k-1, sz-x), &([hd(newList) | &1]))
+    end
+    |> Enum.flat_map(&(&1))
+  end
+  
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
